@@ -9,5 +9,7 @@ router.post("/create-product", ProductControllers.createProduct);
 router.get("/", ProductControllers.getAllProducts);
 //route for getSingleProduct
 router.get("/:productId", ProductControllers.getSingleProduct);
+//route for update product
+router.put("/:productId", ProductControllers.updateProduct);
 
 export const ProductRoutes = router;
