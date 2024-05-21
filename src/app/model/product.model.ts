@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { model, Schema } from "mongoose";
 import {
   Inventory,
   Product,
@@ -17,6 +17,7 @@ const productVariantSchema = new Schema<ProductVariant>({
   },
 });
 
+// create inventorySchema
 const inventorySchema = new Schema<Inventory>({
   quantity: {
     type: Number,
@@ -28,6 +29,7 @@ const inventorySchema = new Schema<Inventory>({
   },
 });
 
+// create produceSchem
 const productSchema = new Schema<Product>({
   name: {
     type: String,
@@ -54,3 +56,5 @@ const productSchema = new Schema<Product>({
 });
 
 // create model
+
+export const ProductModel = model<Product>("Product", productSchema);
