@@ -23,7 +23,25 @@ const createProduct = async (req: Request, res: Response) => {
     });
   }
 };
+//create controller for getAllProduct
+const getAllProducts = async (req: Request, res: Response) => {
+  try {
+    const result = await ProductServices.getAllProductsFromDB();
+    res.status(200).json({
+      success: true,
+      message: "Retrieve a List of All Products successfully!",
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Product did not retrieve successfully!",
+      error: error,
+    });
+  }
+};
 
 export const ProductControllers = {
   createProduct,
+  getAllProducts,
 };
