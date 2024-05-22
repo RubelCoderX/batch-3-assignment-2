@@ -1,13 +1,23 @@
 import { Request, Response } from "express";
 import { ProductServices } from "../service/product.service";
+import productValidationSchema from "../validation/product.validation.joi";
 
 // create controller for createProduct
 const createProduct = async (req: Request, res: Response) => {
   try {
     const product = req.body;
+    //creating a schema validation using joi
+    const { error } = productValidationSchema.validate(product);
+
+    if (error) {
+      res.status(500).json({
+        success: false,
+        message: "something went wrong",
+        error: error.details,
+      });
+    }
     //call service function to send this data
     const result = await ProductServices.createProductIntoDB(product);
-
     // send response
 
     res.status(200).json({
