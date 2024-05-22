@@ -1,7 +1,12 @@
 import { Request, Response } from "express";
-import { ProductServices } from "../service/product.service";
+import {
+  getAllOrdersFromDB,
+  ProductServices,
+} from "../service/product.service";
 import productValidationSchema from "../validation/product.validation.joi";
-import { date } from "joi";
+
+import { ProductModel } from "../model/product.model";
+import { OrderModel } from "../model/order.model";
 
 // create controller for createProduct
 const createProduct = async (req: Request, res: Response) => {
@@ -131,6 +136,50 @@ const deleteProduct = async (req: Request, res: Response) => {
     console.log(error);
   }
 };
+// create controller for create new order
+const createNewOrder = async (req: Request, res: Response) => {
+  try {
+    const orderData = req.body;
+    // const existingProduct = await OrderModel.findById(productId);
+    // if (!existingProduct) {
+    //   return res.status(404).json({
+    //     success: false,
+    //     message: "Product not found",
+    //     data: null,
+    //   });
+    // }
+    const result = await ProductServices.createOrder(orderData);
+
+    res.status(200).json({
+      success: true,
+      message: "Order created successfully!",
+      date: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while creating the order",
+      error: error,
+    });
+  }
+};
+//create controller for Retrieve All Orders
+const getAllOrder = async (req: Request, res: Response) => {
+  try {
+    const result = await getAllOrdersFromDB();
+    res.status(200).json({
+      success: true,
+      message: "Orders fetched successfully!",
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve orders",
+      error: true,
+    });
+  }
+};
 
 export const ProductControllers = {
   createProduct,
@@ -138,4 +187,6 @@ export const ProductControllers = {
   getSingleProduct,
   updateProduct,
   deleteProduct,
+  createNewOrder,
+  getAllOrder,
 };

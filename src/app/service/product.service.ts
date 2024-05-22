@@ -1,4 +1,5 @@
-import { Product } from "../interface/product.interface";
+import { Order, Product } from "../interface/product.interface";
+import { OrderModel } from "../model/order.model";
 import { ProductModel } from "../model/product.model";
 
 //created product
@@ -42,7 +43,18 @@ const searchProductFromDB = async (searchTerm: string) => {
   });
   return result;
 };
-
+// Create a New Order
+const createOrder = async (orderData: Order) => {
+  const result = await OrderModel.create(orderData);
+  // console.log(result);
+  return result;
+};
+//Retrieve All Orders
+export const getAllOrdersFromDB = async () => {
+  const result = await OrderModel.find();
+  // console.log(result);
+  return result;
+};
 export const ProductServices = {
   createProductIntoDB,
   getAllProductsFromDB,
@@ -50,4 +62,5 @@ export const ProductServices = {
   updateProductFromDB,
   deleteProductFromDB,
   searchProductFromDB,
+  createOrder,
 };

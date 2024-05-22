@@ -16,3 +16,9 @@ export type Product = {
   variants: [ProductVariant];
   inventory: Inventory;
 };
+export type Order = {
+  email: string;
+  productId: string;
+  price: number;
+  quantity: number;
+};

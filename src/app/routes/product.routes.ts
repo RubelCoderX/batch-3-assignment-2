@@ -5,7 +5,7 @@ const router = express.Router();
 
 // route for create product
 router.post("/create-product", ProductControllers.createProduct);
-//route for retrieve all product
+//route for retrieve all product and search query
 router.get("/", ProductControllers.getAllProducts);
 //route for getSingleProduct
 router.get("/:productId", ProductControllers.getSingleProduct);
