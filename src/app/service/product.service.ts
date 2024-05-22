@@ -1,4 +1,4 @@
-import { Order, Product } from "../interface/product.interface";
+import { Product } from "../interface/product.interface";
 import { OrderModel } from "../model/order.model";
 import { ProductModel } from "../model/product.model";
 
@@ -44,11 +44,33 @@ const searchProductFromDB = async (searchTerm: string) => {
   return result;
 };
 // Create a New Order
-const createOrder = async (orderData: Order) => {
-  const result = await OrderModel.create(orderData);
+const createOrder = async (orderData: {
+  email: string;
+  productId: string;
+  price: number;
+  quantity: number;
+}) => {
+  //check the product id is valid
+  const product = await ProductModel.findById(orderData.productId);
+  if (!product) {
+    throw new Error("Invalid product id");
+  }
+  //check insuffciment quantity
+  if (product.inventory.quantity < orderData.quantity) {
+    throw new Error("Insufficient quantity available in inventory");
+  }
+  //reduce the product quantity of istock
+  product.inventory.quantity -= orderData.quantity;
+  // update istock property
+  product.inventory.inStock = product.inventory.quantity > 0;
+  await product.save();
+  //create order
+  const order = new OrderModel(orderData);
+  const result = await order.save();
   // console.log(result);
   return result;
 };
+
 //Retrieve All Orders
 const getAllOrdersFromDB = async () => {
   const result = await OrderModel.find();

@@ -1,12 +1,6 @@
 import { Request, Response } from "express";
-import {
-  getAllOrdersFromDB,
-  ProductServices,
-} from "../service/product.service";
+import { ProductServices } from "../service/product.service";
 import productValidationSchema from "../validation/product.validation.joi";
-
-import { ProductModel } from "../model/product.model";
-import { OrderModel } from "../model/order.model";
 
 // create controller for createProduct
 const createProduct = async (req: Request, res: Response) => {
@@ -139,33 +133,45 @@ const deleteProduct = async (req: Request, res: Response) => {
 // create controller for create new order
 const createNewOrder = async (req: Request, res: Response) => {
   try {
-    const orderData = req.body;
-    // const existingProduct = await OrderModel.findById(productId);
-    // if (!existingProduct) {
-    //   return res.status(404).json({
-    //     success: false,
-    //     message: "Product not found",
-    //     data: null,
-    //   });
-    // }
+    const { email, productId, price, quantity } = req.body;
+    const orderData = {
+      email,
+      productId,
+      price,
+      quantity,
+    };
     const result = await ProductServices.createOrder(orderData);
-
     res.status(200).json({
       success: true,
       message: "Order created successfully!",
       date: result,
     });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "An error occurred while creating the order",
-      error: error,
-    });
+  } catch (error: any) {
+    if (error.message === "Invalid product ID") {
+      res.status(400).json({
+        success: false,
+        message: "Invalid product ID",
+        data: null,
+      });
+    } else if (
+      error.message === "Insufficient quantity available in inventory"
+    ) {
+      res.status(400).json({
+        success: false,
+        message: "Insufficient product quantity",
+        data: null,
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "An error occurred while creating the order",
+        data: null,
+      });
+    }
   }
 };
 //create controller for Retrieve All Orders and search by email
 const getAllOrder = async (req: Request, res: Response) => {
-  // let order;
   try {
     const email = (req.query.email as string) || undefined;
 
@@ -174,7 +180,6 @@ const getAllOrder = async (req: Request, res: Response) => {
       res.status(200).json({
         success: true,
         message: "Orders fetched successfully for user email!",
-
         data: result,
       });
     } else {
