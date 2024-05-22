@@ -163,15 +163,28 @@ const createNewOrder = async (req: Request, res: Response) => {
     });
   }
 };
-//create controller for Retrieve All Orders
+//create controller for Retrieve All Orders and search by email
 const getAllOrder = async (req: Request, res: Response) => {
+  // let order;
   try {
-    const result = await getAllOrdersFromDB();
-    res.status(200).json({
-      success: true,
-      message: "Orders fetched successfully!",
-      data: result,
-    });
+    const email = (req.query.email as string) || undefined;
+
+    if (email) {
+      const result = await ProductServices.getOrderByEmail(email);
+      res.status(200).json({
+        success: true,
+        message: "Orders fetched successfully for user email!",
+
+        data: result,
+      });
+    } else {
+      const result = await ProductServices.getAllOrdersFromDB();
+      res.status(200).json({
+        success: true,
+        message: "All orders fetched successfully!",
+        data: result,
+      });
+    }
   } catch (error) {
     res.status(500).json({
       success: false,
