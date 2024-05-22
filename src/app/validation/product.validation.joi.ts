@@ -1,5 +1,4 @@
 import Joi from "joi";
-
 // Joi schema for ProductVariant
 const productVariantValidationSchema = Joi.object({
   type: Joi.string().required(),

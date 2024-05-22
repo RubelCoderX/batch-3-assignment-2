@@ -27,9 +27,19 @@ const updateProductFromDB = async (
   return result;
 };
 
-//delete product
+//delete a product
 const deleteProductFromDB = async (productId: string) => {
   const result = await ProductModel.findByIdAndDelete(productId);
+  return result;
+};
+//search a product
+const searchProductFromDB = async (searchTerm: string) => {
+  const regex = new RegExp(searchTerm, "i"); //i is a optional i make its case insensitive
+  const result = await ProductModel.find({
+    name: {
+      $regex: regex,
+    },
+  });
   return result;
 };
 
@@ -39,4 +49,5 @@ export const ProductServices = {
   getSingleProductFromDB,
   updateProductFromDB,
   deleteProductFromDB,
+  searchProductFromDB,
 };

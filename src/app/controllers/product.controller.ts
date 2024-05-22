@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
 import { ProductServices } from "../service/product.service";
 import productValidationSchema from "../validation/product.validation.joi";
+import { date } from "joi";
 
 // create controller for createProduct
 const createProduct = async (req: Request, res: Response) => {
   try {
     const product = req.body;
+
     //creating a schema validation using joi
     const { error } = productValidationSchema.validate(product);
 
@@ -33,15 +35,28 @@ const createProduct = async (req: Request, res: Response) => {
     });
   }
 };
-//create controller for getAllProduct
+//create controller for getAllProduct and search
 const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const result = await ProductServices.getAllProductsFromDB();
-    res.status(200).json({
-      success: true,
-      message: "Retrieve a List of All Products successfully!",
-      data: result,
-    });
+    const { searchTerm } = req.query;
+
+    if (searchTerm) {
+      const result = await ProductServices.searchProductFromDB(
+        searchTerm as string
+      );
+      res.status(200).json({
+        success: true,
+        message: `Products matching search term '${searchTerm}' fetched successfully!`,
+        date: result,
+      });
+    } else {
+      const result = await ProductServices.getAllProductsFromDB();
+      res.status(200).json({
+        success: true,
+        message: "Retrieve a List of All Products successfully!",
+        data: result,
+      });
+    }
   } catch (error) {
     res.status(500).json({
       success: false,
