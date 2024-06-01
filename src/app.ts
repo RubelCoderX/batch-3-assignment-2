@@ -9,8 +9,8 @@ app.use(express.json());
 app.use(cors());
 
 //application routes
-app.use("/api/v1/products", ProductRoutes);
-app.use("/api/v1/orders", OrderRoutes);
+app.use("/api", ProductRoutes);
+app.use("/api", OrderRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to Assignment Two!");

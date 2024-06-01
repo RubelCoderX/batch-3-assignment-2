@@ -101,6 +101,7 @@ const updateProduct = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Product updated successfully!",
+      data: updateProduct,
     });
   } catch (error) {
     res.status(500).json({
@@ -114,7 +115,9 @@ const updateProduct = async (req: Request, res: Response) => {
 const deleteProduct = async (req: Request, res: Response) => {
   try {
     const productId = req.params.productId;
+    // console.log(productId);
     const result = await ProductServices.deleteProductFromDB(productId);
+    console.log(result);
     if (!result) {
       res.status(404).json({
         success: false,
@@ -142,6 +145,7 @@ const createNewOrder = async (req: Request, res: Response) => {
       quantity,
     };
     const result = await ProductServices.createOrder(orderData);
+    console.log(result);
     res.status(200).json({
       success: true,
       message: "Order created successfully!",
@@ -187,7 +191,7 @@ const getAllOrder = async (req: Request, res: Response) => {
       const result = await ProductServices.getAllOrdersFromDB();
       res.status(200).json({
         success: true,
-        message: "All orders fetched successfully!",
+        message: "Orders fetched successfully!",
         data: result,
       });
     }

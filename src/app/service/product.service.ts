@@ -31,6 +31,7 @@ const updateProductFromDB = async (
 //delete a product
 const deleteProductFromDB = async (productId: string) => {
   const result = await ProductModel.findByIdAndDelete(productId);
+  // console.log(result);
   return result;
 };
 //search a product
